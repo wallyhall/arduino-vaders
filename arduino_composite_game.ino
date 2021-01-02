@@ -1,3 +1,6 @@
+#include <avr/pgmspace.h>
+#include <avr/sleep.h>
+
 /* cite: https://www.best-microcontroller-projects.com/arduino-digitalwrite.html
  * Significantly faster digital pin read/write
  */
@@ -6,343 +9,438 @@
 #define CLR_PIN_8() PORTB = PORTB & B11111110
 #define CLR_PIN_9() PORTB = PORTB & B11111101
 
-/**
- * Regenerate with:
- * 
-#import <stdio.h>
-#import <string.h>
-int main() {
-	for (unsigned int x = 0; x <= 255; x++) {
-		char ops[512] = "";
-		for (unsigned char y = 128; y > 0; y = y >> 1) {
-			strcat(ops, ((x & y) > 0) ? "SET" : "CLR");
-			strcat(ops, "_PIN_8(); ");
-		}
-		printf("static inline void sl_%d() { %s }\n", x, ops);
-	}
-}
- *
- **/
+#define GET_USER_INPUT() ((PIND & B11000000) ^ B11000000)
 
-static inline void sl_0() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_1() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_2() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_3() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_4() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_5() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_6() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_7() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_8() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_9() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_10() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_11() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_12() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_13() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_14() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_15() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_16() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_17() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_18() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_19() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_20() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_21() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_22() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_23() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_24() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_25() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_26() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_27() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_28() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_29() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_30() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_31() { CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_32() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_33() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_34() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_35() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_36() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_37() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_38() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_39() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_40() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_41() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_42() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_43() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_44() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_45() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_46() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_47() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_48() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_49() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_50() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_51() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_52() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_53() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_54() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_55() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_56() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_57() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_58() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_59() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_60() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_61() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_62() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_63() { CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_64() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_65() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_66() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_67() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_68() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_69() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_70() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_71() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_72() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_73() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_74() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_75() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_76() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_77() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_78() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_79() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_80() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_81() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_82() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_83() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_84() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_85() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_86() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_87() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_88() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_89() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_90() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_91() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_92() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_93() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_94() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_95() { CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_96() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_97() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_98() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_99() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_100() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_101() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_102() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_103() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_104() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_105() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_106() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_107() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_108() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_109() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_110() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_111() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_112() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_113() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_114() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_115() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_116() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_117() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_118() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_119() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_120() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_121() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_122() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_123() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_124() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_125() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_126() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_127() { CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_128() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_129() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_130() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_131() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_132() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_133() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_134() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_135() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_136() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_137() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_138() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_139() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_140() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_141() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_142() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_143() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_144() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_145() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_146() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_147() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_148() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_149() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_150() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_151() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_152() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_153() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_154() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_155() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_156() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_157() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_158() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_159() { SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_160() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_161() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_162() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_163() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_164() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_165() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_166() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_167() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_168() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_169() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_170() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_171() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_172() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_173() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_174() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_175() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_176() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_177() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_178() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_179() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_180() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_181() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_182() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_183() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_184() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_185() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_186() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_187() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_188() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_189() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_190() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_191() { SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_192() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_193() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_194() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_195() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_196() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_197() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_198() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_199() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_200() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_201() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_202() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_203() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_204() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_205() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_206() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_207() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_208() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_209() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_210() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_211() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_212() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_213() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_214() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_215() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_216() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_217() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_218() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_219() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_220() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_221() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_222() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_223() { SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_224() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_225() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_226() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_227() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_228() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_229() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_230() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_231() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_232() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_233() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_234() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_235() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_236() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_237() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_238() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_239() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_240() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_241() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_242() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_243() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_244() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_245() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_246() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_247() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_248() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_249() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_250() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_251() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
-static inline void sl_252() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); CLR_PIN_8();  }
-static inline void sl_253() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8(); SET_PIN_8();  }
-static inline void sl_254() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); CLR_PIN_8();  }
-static inline void sl_255() { SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8(); SET_PIN_8();  }
+#define BUTTON_LEFT B10000000
+#define BUTTON_RIGHT B01000000
 
-#define SPRITE_MAP_HEIGHT 34
-#define SPRITE_MAP_WIDTH 8
+#define VIDEO_HEIGHT 88
+#define VIDEO_WIDTH 14
 
-void (*sprites[4][8])(void) = {
-  {
-    sl_0,     // 00000000
-    sl_0,     // 00000000
-    sl_0,     // 00000000
-    sl_255,   // 11111111
-    sl_255,   // 11111111
-    sl_0,     // 00000000
-    sl_0,     // 00000000
-    sl_0      // 00000000
-  },
-  {
-    sl_0,     // 00000000
-    
-    sl_24,    // 00011000
-    sl_60,    // 00111100
-    sl_126,   // 01111110
-    sl_126,   // 01111110
-    sl_60,    // 00111100
-    sl_24,    // 00011000
-    sl_0      // 00000000
-  },
-  {
-    sl_0,     // 00000000
-    sl_195,   // 11000011
-    sl_102,   // 01100110
-    sl_60,    // 00111100
-    sl_60,    // 00111100
-    sl_102,   // 01100110
-    sl_195,   // 11000011
-    sl_0      // 00000000
-  },
-  {
-    sl_0,
-    sl_0,
-    sl_0,
-    sl_0,
-    sl_0,
-    sl_0,
-    sl_0,
-    sl_0
-  }
-};
+#define UX_STATE_IN_GAME 0
+#define UX_STATE_WELCOME 1
+#define UX_STATE_GAME_OVER 2
+#define UX_STATE_WAIT_USER 3
 
-uint8_t sprite_map[SPRITE_MAP_HEIGHT][SPRITE_MAP_WIDTH];
+uint8_t video_bitmap[VIDEO_HEIGHT][VIDEO_WIDTH];
+uint8_t ux_state = UX_STATE_WELCOME;
 
-void setup() {
+bool waiting_for_frame = true;
+uint8_t y = 0;
+uint8_t y_sub = 2;
+uint16_t pal_row_count = 1;
+
+void clear_screen() {
   // set default sprite map
-  for (uint16_t y = 0; y < SPRITE_MAP_HEIGHT; y++) {
-    for (uint16_t x = 0; x < SPRITE_MAP_WIDTH; x++) {
-      sprite_map[y][x] = 1;
+  for (uint8_t y = 0; y < VIDEO_HEIGHT; y++) {
+    for (uint8_t x = 0; x < VIDEO_WIDTH; x++) {
+      video_bitmap[y][x] = 0;
+    }
+  }
+}
+
+void render_string(const uint8_t x, uint8_t y, const char *str) {
+  uint8_t strpos = 0;
+  uint8_t x_local = x;
+  while (str[strpos] != '\0') {
+    if (str[strpos] != '\n') {
+      render_character(x_local, y, str[strpos]);
+      x_local++;
+    } else {
+      y++;
+      x_local = x;
+    }
+    strpos++;
+  }
+}
+
+inline void sleep() {
+  sleep_enable();
+  set_sleep_mode(SLEEP_MODE_IDLE);
+  sleep_cpu();
+}
+
+void render_character(uint8_t x, uint8_t y, char c) {
+  y *= 8;
+  switch (c) {
+    case 'A':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00111100;
+      video_bitmap[y++][x] = B01100110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11111110;
+      video_bitmap[y++][x] = B10000010;
+      video_bitmap[y++][x] = B10000010;
+      video_bitmap[y][x] = B10000010;
+      break;
+    case 'B':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11111100;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11111100;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y][x] = B11111100;
+      break;
+    case 'C':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00111110;
+      video_bitmap[y++][x] = B01100000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B01100000;
+      video_bitmap[y][x] = B00111110;
+      break;
+    case 'D':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11111000;
+      video_bitmap[y++][x] = B11001100;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11001100;
+      video_bitmap[y][x] = B11111000;
+      break;
+    case 'E':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11111110;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11111000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y][x] = B11111110;
+      break;
+    case 'F':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11111110;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11111000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y][x] = B11000000;
+      break;
+    case 'G':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00111100;
+      video_bitmap[y++][x] = B01100110;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11001110;
+      video_bitmap[y++][x] = B11000010;
+      video_bitmap[y++][x] = B01100110;
+      video_bitmap[y][x] = B00111100;
+      break;
+    case 'H':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11111110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y][x] = B11000110;
+      break;
+    case 'I':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11111110;
+      video_bitmap[y++][x] = B00011000;
+      video_bitmap[y++][x] = B00011000;
+      video_bitmap[y++][x] = B00011000;
+      video_bitmap[y++][x] = B00011000;
+      video_bitmap[y++][x] = B00011000;
+      video_bitmap[y][x] = B11111110;
+      break;
+    case 'J':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11111110;
+      video_bitmap[y++][x] = B00001100;
+      video_bitmap[y++][x] = B00001100;
+      video_bitmap[y++][x] = B00001100;
+      video_bitmap[y++][x] = B00001100;
+      video_bitmap[y++][x] = B11001100;
+      video_bitmap[y][x] = B01111000;
+      break;
+    case 'K':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11001100;
+      video_bitmap[y++][x] = B11011000;
+      video_bitmap[y++][x] = B11110000;
+      video_bitmap[y++][x] = B11011000;
+      video_bitmap[y++][x] = B11001100;
+      video_bitmap[y][x] = B11000110;
+      break;
+    case 'L':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y][x] = B11111110;
+      break;
+    case 'M':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11101110;
+      video_bitmap[y++][x] = B11111110;
+      video_bitmap[y++][x] = B11010110;
+      video_bitmap[y++][x] = B11010110;
+      video_bitmap[y++][x] = B11010110;
+      video_bitmap[y++][x] = B11010110;
+      video_bitmap[y][x] = B11010110;
+      break;
+    case 'N':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11100110;
+      video_bitmap[y++][x] = B11110110;
+      video_bitmap[y++][x] = B11110110;
+      video_bitmap[y++][x] = B11011110;
+      video_bitmap[y++][x] = B11001110;
+      video_bitmap[y][x] = B11000110;
+      break;
+    case 'O':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00111000;
+      video_bitmap[y++][x] = B01101100;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B01101100;
+      video_bitmap[y][x] = B00111000;
+      break;
+    case 'P':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11111100;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11111100;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y][x] = B11000000;
+      break;
+    case 'Q':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00111000;
+      video_bitmap[y++][x] = B01101100;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11010110;
+      video_bitmap[y++][x] = B11001110;
+      video_bitmap[y++][x] = B01101100;
+      video_bitmap[y][x] = B00111010;
+      break;
+    case 'R':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11111100;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11111100;
+      video_bitmap[y++][x] = B11011000;
+      video_bitmap[y++][x] = B11001100;
+      video_bitmap[y][x] = B11000110;
+      break;
+    case 'S':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00111110;
+      video_bitmap[y++][x] = B01100000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y++][x] = B01111000;
+      video_bitmap[y++][x] = B00001100;
+      video_bitmap[y++][x] = B00000110;
+      video_bitmap[y][x] = B11111100;
+      break;
+    case 'T':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11111110;
+      video_bitmap[y++][x] = B00010000;
+      video_bitmap[y++][x] = B00010000;
+      video_bitmap[y++][x] = B00010000;
+      video_bitmap[y++][x] = B00010000;
+      video_bitmap[y++][x] = B00010000;
+      video_bitmap[y][x] = B00010000;
+      break;
+    case 'U':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y][x] = B01111100;
+      break;
+    case 'V':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B01101100;
+      video_bitmap[y++][x] = B01101100;
+      video_bitmap[y++][x] = B00111000;
+      video_bitmap[y][x] = B00010000;
+      break;
+    case 'W':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11010110;
+      video_bitmap[y++][x] = B11010110;
+      video_bitmap[y++][x] = B11010110;
+      video_bitmap[y++][x] = B11010110;
+      video_bitmap[y++][x] = B11010110;
+      video_bitmap[y++][x] = B11111110;
+      video_bitmap[y][x] = B11101110;
+      break;
+    case 'X':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B01101100;
+      video_bitmap[y++][x] = B00111000;
+      video_bitmap[y++][x] = B00010000;
+      video_bitmap[y++][x] = B00111000;
+      video_bitmap[y++][x] = B01101100;
+      video_bitmap[y][x] = B11000110;
+      break;
+    case 'Y':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11000110;
+      video_bitmap[y++][x] = B01101100;
+      video_bitmap[y++][x] = B00111000;
+      video_bitmap[y++][x] = B00010000;
+      video_bitmap[y++][x] = B00010000;
+      video_bitmap[y++][x] = B00010000;
+      video_bitmap[y][x] = B00010000;
+      break;
+    case 'Z':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B11111110;
+      video_bitmap[y++][x] = B00001100;
+      video_bitmap[y++][x] = B00011000;
+      video_bitmap[y++][x] = B00110000;
+      video_bitmap[y++][x] = B01100000;
+      video_bitmap[y++][x] = B11000000;
+      video_bitmap[y][x] = B11111110;
+      break;
+    case ' ':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y][x] = B00000000;
+      break;
+    case '-':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B01111100;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y][x] = B00000000;
+      break;
+    case '?':
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00111000;
+      video_bitmap[y++][x] = B01000100;
+      video_bitmap[y++][x] = B00000100;
+      video_bitmap[y++][x] = B00011000;
+      video_bitmap[y++][x] = B00010000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y][x] = B00010000;
+      break;
+    case '\1':  // triple dot
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B00000000;
+      video_bitmap[y++][x] = B0000000;
+      video_bitmap[y][x] = B10010010;
+      break;
+  }
+}
+
+void render_welcome() {
+  // https://www.nongnu.org/avr-libc/user-manual/pgmspace.html
+  static const uint8_t qr_code[29][4] PROGMEM = {
+    {1,191,124,0},
+    {125,33,189,240},
+    {69,139,5,16},
+    {69,40,117,16},
+    {69,212,197,16},
+    {125,91,181,240},
+    {1,85,84,0},
+    {255,243,7,248},
+    {4,20,114,168},
+    {67,60,66,40},
+    {16,160,46,152},
+    {171,13,40,48},
+    {152,40,208,120},
+    {242,22,115,168},
+    {205,216,175,128},
+    {74,215,4,96},
+    {64,246,214,248},
+    {126,253,198,48},
+    {116,32,47,128},
+    {79,47,64,96},
+    {100,164,80,8},
+    {255,54,231,104},
+    {1,48,165,24},
+    {125,151,23,64},
+    {69,92,112,64},
+    {69,5,90,248},
+    {69,121,168,200},
+    {125,13,147,144},
+    {1,114,225,24}
+  };
+
+  clear_screen();
+
+  // copy QR code
+  for (uint8_t y = 0; y < 29; y++) {
+    for (uint8_t x = 0; x < 4; x++) {
+      video_bitmap[5 + y][4 + x] = pgm_read_byte(&(qr_code[y][x]));
     }
   }
 
+  render_string(1, 5, "PRESENTING\1");
+  wait_frames(200);
+
+  uint8_t strpos = 0;
+  const char str[] = "ARDUINO-VADERS";
+  while (strpos < strlen(str)) {
+    if (strpos < 8) {
+      render_character(2 + strpos, 6, str[strpos]);
+    } else {
+      render_character(strpos - 5, 7, str[strpos]);
+    }
+    strpos++;
+
+    wait_frames(25);
+  }
+
+  wait_frames(50);
+  render_string(3, 9, "READY?");
+}
+
+void setup() {
+
+
+  clear_screen();
 
  // Serial.begin(9600);
 
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
+  
+  pinMode(6, INPUT_PULLUP);
+  pinMode(7, INPUT_PULLUP);
 
   digitalWrite(8, LOW);
  // Serial.begin(9600);
@@ -367,54 +465,12 @@ void setup() {
   TCCR2B |= 2; // Prescale=8, Enable Timer Clock
 }
 
-static void inline wait_for(uint8_t target) {
-  while (target > TCNT2) {
-    __asm__ __volatile__ (
-      "nop"
-    );
-  }
-  /*__asm__ __volatile__ (
-      "100:\n"                            // loop start
-        //"\tsub  %[target], %[tcnt2]\n"    // subtract count from target
-        //"\tbrcc 100b\n"                   // branch if exceeded
-        "\tcp   %[target], %[tcnt2]\n"
-        "\tbrne 100b\n"
-      :                                   // no clobbers
-      : [target]  "a" (target),           // target count
-        [tcnt2]   "a" (TCNT2)             // current count
-  );*/
+inline void wait_for(uint8_t target) {
+  while (target > TCNT2 - 1);
 }
-/*
-*/
 
-// borrowed from https://github.com/pkendall64/arduino-tvout/blob/master/src/video_gen.cpp
-/*static void inline wait_for(uint8_t time) {
-	__asm__ __volatile__ (
-			"subi	%[time], 10\n"                //   
-			"sub	%[time], %[tcnt2]\n\t"        //   
-		"100:\n\t"                            // LOOP (repeat waiting)
-			"subi	%[time], 3\n\t"               //   sub 3
-			"brcc	100b\n\t"                     //   branch if carry is clear (repeat waiting)
-			"subi	%[time], 0-3\n\t"             //   
-			"breq	101f\n\t"                     //   branch if 0 (skip extra cycle and end)
-			"dec	%[time]\n\t"                  //   dec time
-			"breq	102f\n\t"                     //   branch if 0 (target precisely met, end)
-			"rjmp	102f\n"                       //   relative jump
-		"101:\n\t"                            // END + noop (skip extra cycle)
-			"nop\n"                             //   noop
-		"102:\n"                              // END
-		:                                     // no clobbers
-		: [time] "a" (time),                  // requested target
-		[tcnt2] "a" (TCNT2)                   // timer 2 counter 
-	);
-}
-/*
-*/
-
-byte x = 0;
-uint16_t count = 1;
 ISR(/*TIMER2_COMPB_vect*/ TIMER2_OVF_vect) {
-  switch (count) {
+  switch (pal_row_count) {
     case 5:
       // switch to Short Sync
       //TCCR2A = 0x23; // 0010 0011
@@ -426,6 +482,13 @@ ISR(/*TIMER2_COMPB_vect*/ TIMER2_OVF_vect) {
       // switch to 64us mode (scanlines)
       OCR2A = 128-1; // set for 64us mode
       OCR2B = (byte) 8; // 4us (OCR2A * 0.07);
+
+      y = 0;
+      y_sub = 2;
+      break;
+
+    case 305:
+      waiting_for_frame = false;
       break;
 
     case 314: // 287 display lines + 18 blanks + 10 (leading 32us sections)
@@ -438,83 +501,224 @@ ISR(/*TIMER2_COMPB_vect*/ TIMER2_OVF_vect) {
       // entering broad sync
       TCCR2A = 0x33; // 0011 0011
       OCR2B = (byte) 55; // (OCR2A * 0.86);
-      count = 0;
+      pal_row_count = 0;
       break;
     
     default:
-      if (count >= /*28*/40 && count < /*315*/305) {
-        // 22 to 120 x is safe = 98 "pixels" wide (this isn't the spec - just simpler timings to start with)
-        // 40 to 305 y is safe = 265 scanlines high
+      // 22 to 120 x is safe = 98 "pixels" wide (this isn't the spec - just simpler timings to start with)
+      // 40 to 305 y is safe = 265 scanlines high
+      if (pal_row_count >= 40 && pal_row_count < /*295*/ 304) {
+        wait_for(17);
+        __asm__ __volatile__ (
+          // http://ww1.microchip.com/downloads/en/DeviceDoc/AVR-Instruction-Set-Manual-DS40002198A.pdf
+          // https://www.nongnu.org/avr-libc/user-manual/inline_asm.html
+          // clear reg 16
+          "clr  r16\n\t"
 
-        // during the pre-rendering period (the sync and black level period)
-        uint8_t sprite_map_row = ((count - 40) + 1) / 8;
-        uint8_t sprite_map_col = 0;
+          ".macro bit_render b\n\t"
+            "bst  __tmp_reg__,\\b\n\t"     // set SREG[T] (r16) to Nth bit of supplied reg (e.g. __tmp_reg__)
+            "bld  r16,0\n\t"             // copy T to bit 1 of r16
+            "out  %[portb],r16\n"      // output status r16 to portb (setting the pixel on or off)"
+          ".endm\n"
 
-        //uint8_t curent_sprite = sprite_map[sprite_map_row][sprite_map_col];
-        //bool next_pixel = current_sprite; // TODO - resolve current sprite's pixel
-        bool next_pixel = 0;
+          ".macro nop2\n\t"
+            "nop\n\t"
+            "nop\n"
+          ".endm\n"
 
-        byte values[25] = {
-          false, true, false, true, false,
-          true, false, true, false, true,
-          false, true, false, true, false,
-          true, false, true, false, true,
-          false, true, false, true, false
-        };
+          ".macro byte_render_and_inc_pointer\n\t"
+            // load the current sprite
+            "ld   __tmp_reg__,X+\n\t"    // resolve address in reg X, loading to __tmp_reg__, and increment pointer
 
-        // sprite number - allocate while we're in dead space
-        uint8_t sprite_map_y = (count - 40) / 8;
-        uint8_t sprite_y = (count - 40) % 8; 
+            // render it (bit by bit, into reg 16)
+            "bit_render 7\n\t"
+            "nop2\n\t"
+            "bit_render 6\n\t"
+            "nop2\n\t"
+            "bit_render 5\n\t"
+            "nop2\n\t"
+            "bit_render 4\n\t"
+            "nop2\n\t"
+            "bit_render 3\n\t"
+            "nop2\n\t"
+            "bit_render 2\n\t"
+            "nop2\n\t"
+            "bit_render 1\n\t"
+            "nop2\n\t"
+            "bit_render 0\n"
+          ".endm\n"
 
-        // wait for start of safe displaying
-        uint8_t next_timing_target = 21;
-        wait_for((byte)next_timing_target);
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n"
+          "byte_render_and_inc_pointer\n" // 14 cols of bytes
 
-        sprites[sprite_map[sprite_map_y][0]][sprite_y]();
-        sprites[sprite_map[sprite_map_y][1]][sprite_y]();
-        sprites[sprite_map[sprite_map_y][2]][sprite_y]();
-        sprites[sprite_map[sprite_map_y][3]][sprite_y]();
-        sprites[sprite_map[sprite_map_y][4]][sprite_y]();
-        sprites[sprite_map[sprite_map_y][5]][sprite_y]();
-        sprites[sprite_map[sprite_map_y][6]][sprite_y]();
-        sprites[sprite_map[sprite_map_y][7]][sprite_y]();
+            // loop if we've not finished the row - TODO: does this need unrolling?
+            //"dec  %[sprite_cols]\n\t"
+            //"brne sprite_render_loop\n"
+          "clr r16\n"
+          "out  %[portb],r16\n"
+          :
+          :
+            // x and y (and indeed z) are pointer registers (low/high byte per reg, paired)
+            "x" (&video_bitmap[y][0]),
+            [portb] "I" (_SFR_IO_ADDR(PORTB)),
+            [sprite_cols] "r" (8)
+          : "r16"
+        );
 
-//setPin8(); clrPin8();setPin8(); clrPin8();setPin8(); clrPin8();setPin8(); clrPin8();
-
-//        for (char x = 0; x < 10; x++) {
-          // first thing to do is set the pixel (timing sensitive)
-          //(values[x] == true) ? setPin8() : clrPin8();
-//        }
-
-        // finished scanlie
-        CLR_PIN_8();
+        // division by 3 is computationally expensive.
+        // comparison of zero is cheap.  This repeats every 3 lines, to make square pixels.
+        if (y_sub-- == 0) {
+          y++;
+          y_sub = 2;
+        }
       }
       break;
   }
-  count++;
+  pal_row_count++;
 }
 
+#define PLAYER_Y 80   // player Y position, which is fixed
+
+#define LOWER_EDGE 85
+#define UPPER_EDGE 5
+#define LEFT_EDGE 5
+#define RIGHT_EDGE 108
+
+void game_loop() {
+//  uint16_t game_ticks = 0;
+  uint8_t player_x = 56;
+
+  uint8_t ball_x = 56;
+  uint8_t ball_y = 79;
+
+  uint8_t ball_x_vel = 0;
+  uint8_t ball_y_vel = -1;
+
+  while (1) {
+//    game_ticks++;
+    
+    switch (GET_USER_INPUT()) {
+      case BUTTON_LEFT:
+        if (player_x > LEFT_EDGE) {
+          player_x--;
+        }
+        break;
+      case BUTTON_RIGHT:
+        if (player_x < RIGHT_EDGE - 5) {
+          player_x++;
+        }
+        break;
+    }
+
+    // draw the player
+    uint8_t player_video_mem_pos = player_x / 8;
+    uint8_t player_bitshift_offset = player_x % 8;
+    // clear anything to the left of the player
+    video_bitmap[PLAYER_Y][player_video_mem_pos - 1] = 0;
+    // draw the left and right halves of the player, if they overlap a byte of video memory
+    video_bitmap[PLAYER_Y][player_video_mem_pos] = B11111000 >> (player_bitshift_offset);
+    video_bitmap[PLAYER_Y][player_video_mem_pos + 1] = B11110000 << (7 - player_bitshift_offset);
+
+// ** TODO - could do this only if the player is moving, if performance gets too tight.
+    // clear where the ball was last positioned (precisely, so as to minimise artefacts on other rendered things)
+    video_bitmap[ball_y][ball_x / 8] &= (B11111111 ^ (B10000000 >> (ball_x % 8)));
+    // calculate new ball position
+    ball_y += ball_y_vel;
+    ball_x += ball_x_vel;
+    // redirect ball if it's bounced top/bottom
+    if (ball_y < UPPER_EDGE || ball_y > LOWER_EDGE) {
+      ball_y_vel = 0 - ball_y_vel;
+    // redirect ball if it's bounced off the player
+    } else if (ball_y_vel > 0 && (ball_y == PLAYER_Y - 1) && (ball_x >= player_x && ball_x <= player_x + 5)) {
+      ball_y_vel = 0 - ball_y_vel;
+      ball_x_vel = ball_x - player_x - 2;
+    }
+    // redirect ball if it's bounced off the left/right
+    if (ball_x < LEFT_EDGE || ball_x > RIGHT_EDGE) {
+      ball_x_vel = 0 - ball_x_vel;
+    }
+    // render the new ball position
+    video_bitmap[ball_y][ball_x / 8] = B10000000 >> (ball_x % 8);
+
+    wait_frames(3);
+  }
+}
+
+/**
+ * something funky happens here with the GCC optimisations.
+ * it causes a crash?  disabling optimisations fixes it.
+ */
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+inline void wait_frame() {
+  waiting_for_frame = true;
+  while (waiting_for_frame) {
+    sleep();
+  }
+}
+#pragma GCC pop_options
+
+inline void wait_frames(uint16_t frames) {
+  while (frames-- > 0) {
+    wait_frame();
+  }
+}
+
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+void wait_user_input() {
+  while (GET_USER_INPUT() == 0) {
+    sleep();
+  }
+  
+  // make sure we exit cleanly on a frame start.
+  wait_frame();
+}
+#pragma GCC pop_options
+
 void loop() {
-  //Serial.println(count);
- // delay(1000);
- uint16_t pos_y = 0;
- uint16_t pos_x = 0;
- while (1) {
-      uint8_t new_sprite = sprite_map[pos_y][pos_x] + 1;
-      sprite_map[pos_y][pos_x] = new_sprite == 4 ? 0 : new_sprite;
+    switch (ux_state) {
+      case UX_STATE_IN_GAME:
+        game_loop();
+        // TODO - handle game result (win/loose, score etc)
+        break;
+      
+      case UX_STATE_WELCOME:
+        render_welcome();
+        ux_state = UX_STATE_WAIT_USER;
+        break;
+      
+      case UX_STATE_GAME_OVER:
+        //render_score();
+        clear_screen();
+        render_string(1, 1, "GAME OVER");
+        wait_frames(100);
+        ux_state = UX_STATE_WELCOME;
+        break;
+      
+      case UX_STATE_WAIT_USER:
+        wait_user_input();
+        clear_screen();
+        ux_state = UX_STATE_IN_GAME;
+        break;
+    }
 
-      pos_y++;
-      if (pos_y == SPRITE_MAP_HEIGHT) {
-        pos_y = 0;
-        pos_x++;
-      }
-
-      if (pos_x == SPRITE_MAP_WIDTH) {
-        pos_x = 0;
-      }
-
-      for (int i = 0; i < 10000; i++) {
-        __asm__ __volatile__ ( "nop" );
-      }
- }
+    // this must all be executable in less than between-frame rendering, less interrupt handling time
+    video_bitmap[0][0]++;
+  
+      //for (int i = 0; i < 10000; i++) {
+       // __asm__ __volatile__ ( "nop" );
+     // }
 }
